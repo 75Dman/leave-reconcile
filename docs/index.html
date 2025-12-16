@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self';">
+    <title>Leave Reconciliation - Client-only</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app"><!-- pages will be loaded here --></div>
+
+        <!-- SheetJS (SheetJS community) - prefer local vendored copy in docs/lib, fallback to CDN if missing -->
+        <script src="lib/xlsx.full.min.js"></script>
+        <script>
+            if (typeof XLSX === 'undefined') {
+                var s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+                document.head.appendChild(s);
+            }
+        </script>
+        <!-- ExcelJS: prefer local vendored copy in docs/lib, fallback to CDN if missing -->
+        <script src="lib/exceljs.min.js"></script>
+        <script>
+            if (typeof ExcelJS === 'undefined') {
+                var s = document.createElement('script');
+                s.src = 'https://unpkg.com/exceljs/dist/exceljs.min.js';
+                document.head.appendChild(s);
+            }
+        </script>
+            <!-- Diagnostic: show runtime JS errors in-page to help debugging -->
+            <script>
+                window.addEventListener('error', function (e) {
+                    try {
+                        var msg = 'JS Error: ' + (e.message || e.error || 'unknown');
+                        console.error(msg, e.error || e);
+                        document.body.innerHTML = '<pre style="white-space:pre-wrap; color:#b00; background:#fff; padding:12px;">' + msg + '\n' + (e.error && e.error.stack ? e.error.stack : '') + '</pre>';
+                    } catch (ee) { console.error('Error handler failed', ee); }
+                });
+                window.addEventListener('unhandledrejection', function (ev) {
+                    try {
+                        var msg = 'Unhandled Promise Rejection: ' + (ev.reason && ev.reason.message ? ev.reason.message : String(ev.reason));
+                        console.error(msg, ev.reason);
+                        document.body.innerHTML = '<pre style="white-space:pre-wrap; color:#b00; background:#fff; padding:12px;">' + msg + '\n' + (ev.reason && ev.reason.stack ? ev.reason.stack : '') + '</pre>';
+                    } catch (ee) { console.error('Rejection handler failed', ee); }
+                });
+            </script>
+        <script src="app.js"></script>
+</body>
+</html>

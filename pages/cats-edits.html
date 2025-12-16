@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- CATs Edits Page - ported from app/templates/cats_edits.html and adapted for client-only operation -->
+<div class="container">
+    <div class="header">
+        <h1>Leave Reconciliation Tool</h1>
+        <p>Modifications to CATs Entries</p>
+    </div>
+    
+    <nav class="page-nav cats-page">
+        <div class="nav-left">
+            <a href="#/" class="nav-btn">Start Page</a>
+            <a href="#/upload" class="nav-btn">Reconcile Page</a>
+            <a href="#/cats-edits" class="nav-btn active">CATs Edits Page</a>
+        </div>
+        <div class="icon-buttons-container">
+            <button class="icon-btn" id="downloadCatsBtn" title="Download as Excel">
+                <span class="icon-download"></span>
+            </button>
+            <button class="icon-btn" id="copyClipboardBtn" title="Copy to Clipboard">
+                <span class="icon-clipboard"></span>
+            </button>
+            <button class="icon-btn" id="emailTableBtn" title="Email Table">
+                <span class="icon-email"></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="cats-intro">
+        <p><strong>These are the changes that need to be made in CATs on DRMIS</strong></p>
+        <p>If you are sending these changes to DRMIS support, add additional entries for each day to account for the employee's complete work day.</p>
+    </div>
+
+    <div id="catsContent"></div>
+
+</div>

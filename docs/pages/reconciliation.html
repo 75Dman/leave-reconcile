@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!-- Reconciliation Page - ported from app/templates/index.html and adapted for client-only operation -->
+<div class="container">
+    <div class="header">
+        <h1>Leave Reconciliation Tool</h1>
+        <p>Upload DRMIS and ORACLE leave files to reconcile mismatches</p>
+    </div>
+    
+    <nav class="page-nav reconcile-page">
+        <div class="nav-left">
+            <a href="#/" class="nav-btn">Start Page</a>
+            <a href="#/upload" class="nav-btn active">Reconcile Page</a>
+            <a href="#/cats-edits" class="nav-btn">CATs Edits Page</a>
+        </div>
+        <div class="icon-buttons-container">
+            <button class="icon-btn" id="downloadReconciliationBtn" title="Download as Excel">
+                <span class="icon-download"></span>
+            </button>
+            <button class="icon-btn" id="resetFormBtn" title="Start Over">
+                <span class="icon-refresh"></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="upload-section">
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div id="sessionInfoBanner" style="display:none; background: #e7f3ff; border: 1px solid #284162; border-radius: 4px; padding: 15px; margin-bottom: 20px;">
+                <p style="margin: 0 0 10px 0; color: #284162; font-weight: 600;">📁 Previous files are still loaded in memory</p>
+                <p id="sessionDrmis" style="margin: 5px 0; color: #284162; font-size: 14px; display:none;">DRMIS: <strong style="color: #af3c43;" id="drmis_filename">filename</strong> still loaded in memory</p>
+                <p id="sessionOracle" style="margin: 5px 0; color: #284162; font-size: 14px; display:none;">Oracle: <strong style="color: #af3c43;" id="oracle_filename">filename</strong> still loaded in memory</p>
+                <p style="margin: 10px 0 0 0; color: #6c757d; font-size: 14px;">You can continue working with your previous reconciliation results, or upload new files to replace them.</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="drmis_file">DRMIS Leave File (Excel)</label>
+                <input type="file" id="drmis_file" name="drmis_file" accept=".xlsx,.xls">
+                <span class="file-name" id="drmis_name"></span>
+                <button type="button" class="preview-btn" id="drmis_preview_btn" style="display:none;" onclick="showFilePreview('drmis')" title="Preview DRMIS file">
+                    <span class="preview-icon-svg" aria-hidden="true">
+                        <!-- Simple spreadsheet/grid SVG with green header -->
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect x="2" y="3" width="20" height="18" rx="2" fill="#F3F6F7"/>
+                            <rect x="3" y="4" width="18" height="3" rx="1" fill="#C62828"/>
+                            <g stroke="#631313" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 10h3" />
+                                <path d="M10.5 10h3" />
+                                <path d="M15 10h3" />
+                                <path d="M6 13h3" />
+                                <path d="M10.5 13h3" />
+                                <path d="M15 13h3" />
+                            </g>
+                        </svg>
+                    </span>
+                    <span class="preview-text">Preview</span>
+                </button>
+                <span class="preview-count" id="drmis_count" aria-live="polite" style="display:inline-block; margin-left:10px; color:#3b3b3b; font-size:13px;"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="oracle_file">ORACLE Leave File (Excel)</label>
+                <input type="file" id="oracle_file" name="oracle_file" accept=".xlsx,.xls">
+                <span class="file-name" id="oracle_name"></span>
+                <button type="button" class="preview-btn" id="oracle_preview_btn" style="display:none;" onclick="showFilePreview('oracle')" title="Preview ORACLE file">
+                    <span class="preview-icon-svg" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect x="2" y="3" width="20" height="18" rx="2" fill="#F3F6F7"/>
+                            <rect x="3" y="4" width="18" height="3" rx="1" fill="#C62828"/>
+                            <g stroke="#631313" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 10h3" />
+                                <path d="M10.5 10h3" />
+                                <path d="M15 10h3" />
+                                <path d="M6 13h3" />
+                                <path d="M10.5 13h3" />
+                                <path d="M15 13h3" />
+                            </g>
+                        </svg>
+                    </span>
+                    <span class="preview-text">Preview</span>
+                </button>
+                <span class="preview-count" id="oracle_count" aria-live="polite" style="display:inline-block; margin-left:10px; color:#3b3b3b; font-size:13px;"></span>
+            </div>
+
+            <button type="submit" class="btn-submit">Reconcile Leave</button>
+        </form>
+    </div>
+
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Processing files...</p>
+    </div>
+
+    <div id="error" class="error hidden"></div>
+
+    <div id="results" class="results hidden">
+        <div class="results-header">
+            <h2>Reconciliation Results</h2>
+            <p id="resultMessage"></p>
+        </div>
+
+        <div class="table-wrapper">
+            <table id="resultTable">
+                <thead>
+                    <tr id="tableHeader"></tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <div class="results-footer">
+            <button type="button" class="btn-download" id="downloadResultsBtn">Download as Excel</button>
+            <a href="#/cats-edits" class="btn-download">Go To CATs Edits</a>
+            <button type="button" class="btn-reset" id="resetBtn">Start Over</button>
+        </div>
+    </div>
+</div>
+
+<!-- File Preview Modal -->
+<div id="filePreviewModal" class="modal" style="display:none;" onclick="if(event.target.id === 'filePreviewModal') closeFilePreview();">
+    <div class="modal-content" onclick="event.stopPropagation();">
+        <div class="modal-header">
+            <h2 id="modalTitle">File Preview</h2>
+            <button class="modal-close" onclick="closeFilePreview()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="table-wrapper">
+                <table id="previewTable">
+                    <thead>
+                        <tr id="previewHeader"></tr>
+                    </thead>
+                    <tbody id="previewBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

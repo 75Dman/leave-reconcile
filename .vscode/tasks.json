@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Start Flask Server",
+			"type": "shell",
+			"command": "cd app; python run.py",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}

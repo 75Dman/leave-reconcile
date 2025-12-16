@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!-- Start Page - content ported from app/templates/main.html with Flask templating removed -->
+<div class="container">
+    <div class="header">
+        <h1>Leave Reconciliation Tool</h1>
+        <p>Upload DRMIS and ORACLE leave files to reconcile mismatches</p>
+    </div>
+    
+    <nav class="page-nav">
+        <a href="#/" class="nav-btn active">Start Page</a>
+        <a href="#/upload" class="nav-btn">Reconcile Page</a>
+        <a href="#/cats-edits" class="nav-btn">CATs Edits Page</a>
+    </nav>
+    
+    <div class="intro-text">
+        <p>Follow these steps to reconcile leave entries from DRMIS and ORACLE reports.</p>
+    </div>
+
+    <div class="steps-container">
+        <!-- Step 1 -->
+        <div class="step-card">
+            <div class="step-header">
+                <h2>Step <span class="step-number">1</span>: Export Drmis Leave Report using CADO</h2>
+            </div>
+            <div class="step-content">
+                <ul>
+                    <li>Create CADO report to capture from the beginning of the fiscal year April 01 to current date.</li>
+                    <li>Export CADO report as is or using /Leave format and save as .xlsx.</li>
+                    <li><strong>Required columns in the file:</strong> Pers No, Date, A/A Type (leave code), and Hours.</li>
+                    <li>The app will automatically extract the required columns.</li>
+                    <li>All Codes are filtered to only display Actual Leave Codes.</li>
+                    <li>Do not worry about extra blank rows or rows with no date — rows without a date are ignored.</li>
+                    <li>Move on to Step 2</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card">
+            <div class="step-header">
+                <h2>Step <span class="step-number">2</span>: Export Oracle Leave Report from Oracle</h2>
+            </div>
+            <div class="step-content">
+                <ul>
+                    <li>In Oracle, view the summary and export to .xlsx.</li>
+                    <li><strong>Required columns in the file:</strong> From Date (or Date), Leave Code (or Absence Type), and Hours Recorded (or Hours).</li>
+                    <li>The app will automatically extract the required columns.</li>
+                    <li>All Codes are filtered to only display Actual Leave Codes.</li>
+                    <li>Do not worry about extra blank rows or rows with no date — rows without a date are ignored.</li>
+                    <li>Move on to Step 3</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card">
+            <div class="step-header">
+                <h2>Step <span class="step-number">3</span>: Upload Files and View Results</h2>
+            </div>
+            <div class="step-content">
+                <ul>
+                    <li>Click the "Go to Reconcile Page" button below to upload both DRMIS and ORACLE files.</li>
+                    <li>After selecting your files, click "Reconcile Leave" to process and reconcile the data automatically.</li>
+                    <li>Review mismatches in the results table, which displays only records where DRMIS and Oracle don't match.</li>
+                    <li>You can export the results to Excel for further review or sharing with DRMIS support.</li>
+                </ul>
+                <div class="button-container">
+                    <a href="#/upload" class="nav-button">Go to Reconcile Page</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-card">
+            <div class="step-header">
+                <h2>Step <span class="step-number">4</span>: Review CATs Edits Required</h2>
+            </div>
+            <div class="step-content">
+                <ul>
+                    <li>Review the reconciliation results and select which entries you want included in the CATs Edits table by checking or unchecking the boxes. By default, all entries are selected.</li>
+                    <li>After processing your files, click "View CATs Edits" to see what entries need to be made in CATs (DRMIS).</li>
+                    <li>The CATs Edits page shows exactly what leave codes and hours should be entered to match Oracle.</li>
+                    <li>Depending on how much data you provided with your DRMIS file, the CATs Edits table will attempt to fill in remaining information; or</li>
+                    <li>Blank rows are provided for you to add additional entries to ensure each day totals 8 hours (unless overtime).</li>
+                    <li>You can copy the table or download it as Excel to send to DRMIS support.</li>
+                    <li>Alternatively, use the Email button to copy the formatted table and automatically open your email client with a pre-filled subject line—simply paste (CTRL + V) the content and add the recipient.</li>
+                </ul>
+                <div class="button-container">
+                    <a href="#/cats-edits" class="nav-button">View CATs Edits</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-nav">
+        <a href="#/upload" class="nav-button nav-button-large">Start Reconciliation →</a>
+    </div>
+
+    <div class="disclaimer-section">
+        <p class="disclaimer-text">
+            <strong>Data Privacy Notice:</strong> All data processing is performed locally on your device. No information is transmitted, stored, or saved on external servers.
+        </p>
+    </div>
+</div>
